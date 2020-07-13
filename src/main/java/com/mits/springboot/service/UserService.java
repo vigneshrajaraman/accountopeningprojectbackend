@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService {
 	public Users insertOrUpdate(Users user) {
 		return userRepo.save(user);
 	}
-	public Optional<Users> getOne(int id) {
+	public Optional<Users> getOne(String id) {
 		return userRepo.findById(id);
 	}
 }

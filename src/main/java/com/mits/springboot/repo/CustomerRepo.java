@@ -13,5 +13,5 @@ import com.mits.springboot.entity.Customer;
 
 public interface CustomerRepo extends JpaRepository<Customer, String> {
 
-
+//Integer getCustomerId();
 }

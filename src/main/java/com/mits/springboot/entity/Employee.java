@@ -3,18 +3,35 @@ package com.mits.springboot.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.mits.springboot.generator.StringPrefixedSequenceIdGenerator;
 
 @Table(name = "employee_table")
 @SequenceGenerator(name = "employee_seq")
 @Entity
 public class Employee implements Serializable {
 	@Id
+	@GenericGenerator(
+	        name = "employee_seq", 
+	        strategy = "com.mits.springboot.generator.StringPrefixedSequenceIdGenerator", 
+	        parameters = {
+	            @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+	            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "EMP_")
+	            })
+	@GeneratedValue(generator = "employee_seq",strategy = GenerationType.SEQUENCE)
 	private String employeeId;
 	private String firstName;
 	private String designation;
+	@ManyToOne
 	private EmployeeType employeeType;
 	private float salary;
 
@@ -30,11 +47,13 @@ public class Employee implements Serializable {
 		this.salary = salary;
 	}
 
-	public String getEmplyeeId() {
+	
+
+	public String getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmplyeeId(String employeeId) {
+	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 

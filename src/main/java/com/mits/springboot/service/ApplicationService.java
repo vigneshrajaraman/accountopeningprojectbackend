@@ -41,5 +41,7 @@ public class ApplicationService {
 	public void deleteAll() {
 		repo.deleteAll();
 	}
-
+	public Integer getApplicationId() {
+		return null;
+	}
 }

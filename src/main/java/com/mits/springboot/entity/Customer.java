@@ -2,19 +2,36 @@ package com.mits.springboot.entity;
 
 import java.io.Serializable;
 
+import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.mits.springboot.generator.StringPrefixedSequenceIdGenerator;
+
 @Table(name = "customer_table")
 @Entity
-@SequenceGenerator(name = "customer_seq", initialValue = 100)
+@SequenceGenerator(name = "customer_table_Seq")
+
 public class Customer implements Serializable {
 	@Id
+	@GenericGenerator(
+	        name = "customer_table_Seq", 
+	        strategy = "com.mits.springboot.generator.StringPrefixedSequenceIdGenerator", 
+	        parameters = {
+	            @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+	            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "CUS_")
+	            })
+	@GeneratedValue(generator = "customer_table_Seq",strategy = GenerationType.SEQUENCE)
 	private String customerId;
 	private String firstName;
 	private String middleName;

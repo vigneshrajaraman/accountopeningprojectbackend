@@ -3,7 +3,6 @@ package com.mits.springboot.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,13 +17,25 @@ import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.mits.springboot.generator.StringPrefixedSequenceIdGenerator;
+
 @Table(name = "user")
 @Entity
 @SequenceGenerator(name = "user_seq", initialValue = 100)
 public class Users implements Serializable {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY,generator = "user_seq")
+	@GenericGenerator(
+	        name = "user_seq", 
+	        strategy = "com.mits.springboot.generator.StringPrefixedSequenceIdGenerator", 
+	        parameters = {
+	            @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
+	            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "us_")
+	            })
+	private String id;
 	@Column(nullable = false, unique = true)
 	private String username;
 	private String password;
@@ -39,7 +50,7 @@ public class Users implements Serializable {
 	public Users() {
 	}
 
-	public Users(Integer id, String username, String password, String email, Date dateCreated,
+	public Users(String id, String username, String password, String email, Date dateCreated,
 			List<Authority> authorities) {
 		super();
 		this.id = id;
@@ -50,11 +61,11 @@ public class Users implements Serializable {
 		this.authorities = authorities;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

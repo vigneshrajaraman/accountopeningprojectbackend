@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import com.mits.springboot.model.Token;
 import com.mits.springboot.service.UserService;
 
 @RestController
+@CrossOrigin	
 public class LoginController {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -29,6 +31,7 @@ public class LoginController {
 	@PostMapping("/login")
 	public Token login(@RequestBody Users user) {
 		System.out.println("login");
+		System.out.println(user.getPassword());
 		Authentication authenticate = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 		Collection<? extends GrantedAuthority> authorities = authenticate.getAuthorities();
