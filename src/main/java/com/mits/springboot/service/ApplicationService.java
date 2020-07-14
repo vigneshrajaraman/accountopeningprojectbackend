@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mits.springboot.entity.Application;
+import com.mits.springboot.entity.Status;
 import com.mits.springboot.repo.ApplicationRepo;
 
 @Service
@@ -44,4 +45,8 @@ public class ApplicationService {
 	public Integer getApplicationId() {
 		return null;
 	}
+	public List<Application> getByStatus(Status status){
+		return repo.findByStatus(status);
+	}
+
 }
