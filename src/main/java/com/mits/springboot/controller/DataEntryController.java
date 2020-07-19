@@ -1,6 +1,7 @@
 package com.mits.springboot.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,8 @@ import com.mits.springboot.service.CustomerService;
 import com.mits.springboot.service.EmployeeService;
 import com.mits.springboot.service.EmployeeTypeService;
 import com.mits.springboot.service.UserService;
+
+import io.jsonwebtoken.lang.Collections;
 
 @RestController
 @RequestMapping("/dataentry")
@@ -79,6 +82,18 @@ public class DataEntryController {
 		Users user = new Users("", "vignesh", bCrypt.encode("Vignesh@1234"), "vigneshrajramanusha@gmail.com",
 				new Date(), sets);
 		Users user2 = userService.insertOrUpdate(user);
+		List<Authority> sets2 = new ArrayList<>();
+		sets2.add(authorityService.getByRoleName("ROLE_dataentery"));
+
+		user = new Users("", "dataentry", bCrypt.encode("dataentry"), "vigneshrajramanusha2@gmail.com", new Date(),
+				sets2);
+		userService.insertOrUpdate(user);
+		sets2 = new ArrayList<>();
+		sets2.add(authorityService.getByRoleName("ROLE_dataverifier"));
+
+		user = new Users("", "verifier", bCrypt.encode("verifier"), "vigneshrajramanusha2@gmai2.com", new Date(),
+				sets2);
+		userService.insertOrUpdate(user);
 		System.out.println("inserted");
 		EmployeeType et = new EmployeeType("1", "General");
 		EmployeeType insertOrUpdate = employeeTypeService.insertOrUpdate(et);
@@ -130,19 +145,58 @@ public class DataEntryController {
 
 	@GetMapping("/getAllSubmitApplication")
 	public List<Application> getAllSubmitApplication() {
-		return applcationService.getByStatus(Status.SUBMIT);
+		Status status = Status.SUBMIT;
+		List<Application> application = new ArrayList<>();
+		application.addAll(applcationService.getByStatus(status));
+		status = Status.RESUBMITT;
+		application.addAll(applcationService.getByStatus(status));
+		return application;
 	}
 
 	@PutMapping("/updateApplication")
-	public Application updateApplication(@RequestBody Application application) {
-		Customer customer = application.getCustomer();
-		customer.setEmployee(employeeService.insertOrUpdate(customer.getEmployee()));
-		application.setCustomer(customerService.insertOrUpdate(customer));
-		application.setStatus(Status.SUBMIT);
-		return applcationService.insertOrUpdate(application);
+	public Application updateApplication(@RequestBody com.mits.springboot.model.Application application) {
+		System.out.println(application);
+		com.mits.springboot.model.Employee employee = application.getCustomer().getEmployee();
+		Employee employee1 = new Employee(employee.getEmployeeId(), employee.getFirstName(), employee.getDesignation(),
+				employeeTypeService.getEmployeeTypeByName(employee.getEmployeeType()), employee.getSalary());
+		com.mits.springboot.model.Customer customer = application.getCustomer();
+		System.out.println(customer);
+		Customer customer2 = new Customer(customer.getCustomerId(), customer.getFirstName(), customer.getMiddleName(),
+				customer.getLastName(), employee1, customer.getGender(), customer.getAge(),
+				customer.getCorrespondenceAddress(), customer.getPresentAddress(), customer.getPermanentAddress());
+		Application application2 = new Application(application.getApplicationNo(), customer2,
+				accountTypeService.getAccountTypeByName(application.getAccountType()),
+				cardTypeService.getCardTypeByName(application.getCardType()), application.isOvereseasAccount(),
+				application.getCreateUser(), application.getCreateDate(), application.getLastModifiedUser(),
+				application.getLastModifiedDate(), application.getStatus());
+		application2.setStatus(Status.RESUBMITT);
+		customer2.setEmployee(employeeService.insertOrUpdate(employee1));
+		application2.setCustomer(customerService.insertOrUpdate(customer2));
+		return applcationService.insertOrUpdate(application2);
 	}
+
 	@PutMapping("/verfierStatus")
-	public Application updateVerfierStatus(@RequestBody Application application) {
-		return applcationService.insertOrUpdate(application);
+	public Application updateVerfierStatus(@RequestBody com.mits.springboot.model.Application application) {
+		System.out.println(application);
+		com.mits.springboot.model.Employee employee = application.getCustomer().getEmployee();
+		Employee employee1 = new Employee(employee.getEmployeeId(), employee.getFirstName(), employee.getDesignation(),
+				employeeTypeService.getEmployeeTypeByName(employee.getEmployeeType()), employee.getSalary());
+		com.mits.springboot.model.Customer customer = application.getCustomer();
+		Customer customer2 = new Customer(customer.getCustomerId(), customer.getFirstName(), customer.getMiddleName(),
+				customer.getLastName(), employee1, customer.getGender(), customer.getAge(),
+				customer.getCorrespondenceAddress(), customer.getPresentAddress(), customer.getPermanentAddress());
+		Application application2 = new Application(application.getApplicationNo(), customer2,
+				accountTypeService.getAccountTypeByName(application.getAccountType()),
+				cardTypeService.getCardTypeByName(application.getCardType()), application.isOvereseasAccount(),
+				application.getCreateUser(), application.getCreateDate(), application.getLastModifiedUser(),
+				application.getLastModifiedDate(), application.getStatus());
+		return applcationService.insertOrUpdate(application2);
+		// return null;
+	}
+
+	@GetMapping("/getAllReworkData")
+	public List<Application> getAlReworkData() {
+		Status status = Status.REWORK;
+		return applcationService.getByStatus(status);
 	}
 }

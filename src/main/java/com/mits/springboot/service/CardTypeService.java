@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mits.springboot.entity.AccountType;
 import com.mits.springboot.entity.CardType;
 import com.mits.springboot.repo.CardTypeRepo;
 @Service
@@ -39,6 +40,9 @@ public class CardTypeService {
 
 	public void deleteAll() {
 		repo.deleteAll();
+	}
+	public CardType getCardTypeByName(String cardTypeName) {
+		return repo.findByCardTypeName(cardTypeName);
 	}
 
 }

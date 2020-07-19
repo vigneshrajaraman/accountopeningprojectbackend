@@ -41,4 +41,7 @@ public class AccountTypeService {
 	public void deleteAll() {
 		repo.deleteAll();
 	}
+	public AccountType getAccountTypeByName(String accountTypeName) {
+		return repo.findByAccountTypeName(accountTypeName);
+	}
 }

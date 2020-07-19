@@ -41,5 +41,8 @@ public class EmployeeTypeService {
 	public void deleteAll() {
 		repo.deleteAll();
 	}
+	public EmployeeType getEmployeeTypeByName(String employeeTypeName) {
+		return repo.findByEmployeeTypeName(employeeTypeName);
+	}
 
 }

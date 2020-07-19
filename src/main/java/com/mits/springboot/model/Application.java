@@ -1,57 +1,27 @@
-package com.mits.springboot.entity;
+package com.mits.springboot.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import com.mits.springboot.entity.Status;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import com.mits.springboot.generator.StringPrefixedSequenceIdGenerator;
-@Table(name="application_table")
-@Entity
-@SequenceGenerator(name = "application_seq", initialValue = 100)
-public class Application implements Serializable {
-	@Id
-	@GenericGenerator(
-	        name = "application_seq", 
-	        strategy = "com.mits.springboot.generator.StringPrefixedSequenceIdGenerator", 
-	        parameters = {
-	            @Parameter(name = StringPrefixedSequenceIdGenerator.INCREMENT_PARAM, value = "1"),
-	            @Parameter(name = StringPrefixedSequenceIdGenerator.VALUE_PREFIX_PARAMETER, value = "APP_")
-	            })
-	@GeneratedValue(generator = "application_seq", strategy = GenerationType.SEQUENCE)
+public class Application {
 	private String applicationNo;
-	@ManyToOne
 	private Customer customer;
-	@ManyToOne
-	private AccountType accountType;
-	@ManyToOne
-	private CardType cardType;
+	private String accountType;
+	private String cardType;
 	private boolean overeseasAccount;
 	private String createUser;
 	private Date createDate;
 	private String lastModifiedUser;
 	private Date lastModifiedDate;
-	@Enumerated(EnumType.STRING)
 	private Status status;
-	
+
 	public Application() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Application(String applicationNo, Customer customer, AccountType accountType, CardType cardType,
+	public Application(String applicationNo, Customer customer, String accountType, String cardType,
 			boolean overeseasAccount, String createUser, Date createDate, String lastModifiedUser,
 			Date lastModifiedDate, Status status) {
 		super();
@@ -66,8 +36,6 @@ public class Application implements Serializable {
 		this.lastModifiedDate = lastModifiedDate;
 		this.status = status;
 	}
-
-	
 
 	public String getApplicationNo() {
 		return applicationNo;
@@ -85,19 +53,19 @@ public class Application implements Serializable {
 		this.customer = customer;
 	}
 
-	public AccountType getAccountType() {
+	public String getAccountType() {
 		return accountType;
 	}
 
-	public void setAccountType(AccountType accountType) {
+	public void setAccountType(String accountType) {
 		this.accountType = accountType;
 	}
 
-	public CardType getCardType() {
+	public String getCardType() {
 		return cardType;
 	}
 
-	public void setCardType(CardType cardType) {
+	public void setCardType(String cardType) {
 		this.cardType = cardType;
 	}
 
@@ -148,7 +116,6 @@ public class Application implements Serializable {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	
 
 	@Override
 	public String toString() {
