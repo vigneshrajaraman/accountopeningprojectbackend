@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import com.mits.springboot.entity.EmployeeType;
 import com.mits.springboot.entity.Gender;
 import com.mits.springboot.entity.Status;
 import com.mits.springboot.entity.Users;
+import com.mits.springboot.model.Search;
 import com.mits.springboot.service.AccountTypeService;
 import com.mits.springboot.service.ApplicationService;
 import com.mits.springboot.service.AuthorityService;
@@ -153,6 +155,16 @@ public class DataEntryController {
 		return application;
 	}
 
+	@GetMapping("getCountRework")
+	public Integer getCountRework() {
+		return applcationService.CountByStatus(Status.REWORK);
+	}
+
+	@GetMapping("getCountVerifier")
+	public Integer getCountVerifier() {
+		return applcationService.CountByStatus(Status.RESUBMITT) + applcationService.CountByStatus(Status.SUBMIT);
+	}
+
 	@PutMapping("/updateApplication")
 	public Application updateApplication(@RequestBody com.mits.springboot.model.Application application) {
 		System.out.println(application);
@@ -198,5 +210,23 @@ public class DataEntryController {
 	public List<Application> getAlReworkData() {
 		Status status = Status.REWORK;
 		return applcationService.getByStatus(status);
+	}
+	@PatchMapping("/Search")
+	public List<Application> search(@RequestBody Search search){
+		String applicationNo = search.getApplicationNo();
+		System.out.println(applicationNo);
+		List<Application> application= new ArrayList<>();
+		if(applicationNo!=null)
+			if(applicationNo.trim().length()!=0)
+			application.add(applcationService.getOne(applicationNo));
+		Date fromDate=search.getFromCreatedDate();
+		System.out.println(fromDate);
+		if(fromDate!=null)
+			application.addAll(applcationService.searchBygreatherThanDateApplications(fromDate));
+		Date toDate=search.getToCreatedDate();
+		if(toDate!=null)
+			application.addAll(applcationService.searchByLessThanDate(toDate));
+		System.out.println(application);
+		return application;
 	}
 }

@@ -66,11 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    config.addExposedHeader("Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, " +
 	            "Content-Type, Access-Control-Request-Method, auth");
 	    config.addAllowedHeader("*");
-	    config.addAllowedMethod("OPTIONS");
-	    config.addAllowedMethod("GET");
-	    config.addAllowedMethod("POST");
-	    config.addAllowedMethod("PUT");
-	    config.addAllowedMethod("DELETE");
+	    config.addAllowedMethod("*");
+	   
 	    source.registerCorsConfiguration("/**", config);
 	    return new CorsFilter(source);
 	}

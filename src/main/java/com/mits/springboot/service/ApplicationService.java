@@ -1,5 +1,6 @@
 package com.mits.springboot.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +43,25 @@ public class ApplicationService {
 	public void deleteAll() {
 		repo.deleteAll();
 	}
+
 	public Integer getApplicationId() {
 		return null;
 	}
-	public List<Application> getByStatus(Status status){
+
+	public List<Application> getByStatus(Status status) {
 		return repo.findByStatus(status);
+	}
+
+	public int CountByStatus(Status status) {
+		return repo.countByStatus(status);
+	}
+
+	public List<Application> searchByLessThanDate(Date date) {
+		return repo.findByCreateDateLessThanEqual(date);
+	}
+
+	public List<Application> searchBygreatherThanDateApplications(Date date) {
+		return repo.findByCreateDateGreaterThanEqual(date);
 	}
 
 }

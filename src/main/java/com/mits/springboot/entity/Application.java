@@ -12,15 +12,16 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mits.springboot.generator.StringPrefixedSequenceIdGenerator;
 @Table(name="application_table")
 @Entity
 @SequenceGenerator(name = "application_seq", initialValue = 100)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
 public class Application implements Serializable {
 	@Id
 	@GenericGenerator(
